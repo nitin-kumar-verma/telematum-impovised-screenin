@@ -13,17 +13,21 @@ Made below changes.
 
 5. Both the apis could be accessed by both POST and GET methods, which is highly discouraged. As the code was meant for POST, all the GET apis should fail ideally without even reaching the handler.
 
-6. fmt.Println was used to log success and error cases : In production grade apps loggers should be used to log to a remote server.
+6. Ensure in db, the table is already created. If not it will throw error. I manually created table for testing, though this process can be automated by including .sql scripts in the go project.
 
-7. In Docker file, entire ubuntu image was pulled which could be replaced by golang image thus making the application light weight.Also the dockerfile was incorrect as app was not a valid directory. so updated it according to latest project structure
+7. fmt.Println was used to log success and error cases : In production grade apps loggers should be used to log to a remote server.
 
-8. The code was not testable by default as different components involved to form api are not testable individually. I have refactored the code to make it more testable (individual db calls can be tested, db connection establishment can be tested and api calls can be tested).
+8. In Docker file, entire ubuntu image was pulled which could be replaced by golang image thus making the application light weight.Also the dockerfile was incorrect. so updated it according to latest project structure and its working.
 
-9. The code was not maintainable as existing project structure is not testable, not extensible, more complicated requirements will make the code much of a mess.
+9. The code was not testable by default as different components involved to form api are not testable individually. I have refactored the code to make it more testable (individual db calls can be tested, db connection establishment can be tested and api calls can be tested).
 
-#BUILD COMMAND : docker build -t app .
+10. The code was not maintainable as existing project structure is not testable, not extensible, more complicated requirements will make the code much of a mess.
 
-#RUN COMMAND : docker run -m 100m -p 8080:8080 -e PORT=8080 -e MONGO_URI=mongodb://host.docker.internal:27017 -e APP_NAME=auth-core -e MONGO_DB_NAME=users -e JWT_SECRET='arSby6PGskbPG0fP89CvCccGyhvd_d9RqzRNin-YWmU=' auth-core:latest
+11. Use below command to create a docker image of mysql
+    a. docker pull mysql:latest
+    b. docker run -d --mysql-container -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=test -p 3306:3306 mysql:latest
 
-docker build -t app .
-docker run -e MYSQL_URI="root:password@tcp(host.docker.internal:3306)/test" -p 8080:8080 app
+12.  Use below command to create and run a docker image of this app
+    a. docker build -t app .
+    b. docker run -e MYSQL_URI="root:password@tcp(host.docker.internal:3306)/test" -p 8080:8080 app
+
